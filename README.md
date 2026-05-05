@@ -102,4 +102,4 @@ Ver [`docs/TASKS.md`](./docs/TASKS.md) para la guía completa de tareas dividida
 - **Dev B** (novato aprendiendo) — componentes UI, exploración del código
 
 ---
-*Construido con ❤️ como proyecto integrador — Labs 2 al 7*
+*Construido con 🤓 como proyecto integrador — Labs 2 al 7*
