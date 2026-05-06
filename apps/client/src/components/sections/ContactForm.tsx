@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import api from '@/services/api'
 
 interface FormState {
   name: string; email: string; phone: string; occasion: string; message: string; consent: boolean
@@ -45,9 +46,19 @@ export default function ContactForm() {
       return
     }
     setStatus('loading')
-    await new Promise(r => setTimeout(r, 1200)) // simulate API call
-    setStatus('success')
-    setForm({ name:'', email:'', phone:'', occasion:'', message:'', consent:false })
+    try {
+      await api.post('/api/contact', {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        occasion: form.occasion,
+        message: form.message,
+      })
+      setStatus('success')
+      setForm({ name:'', email:'', phone:'', occasion:'', message:'', consent:false })
+    } catch {
+      setStatus('error')
+    }
   }
 
   const fieldProps = (name: keyof FieldErrors) => ({

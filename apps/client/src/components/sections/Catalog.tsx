@@ -1,3 +1,5 @@
+import Badge from '@/components/ui/Badge'
+
 const PRODUCTS = [
   { id: 1, name: 'Ramo Romántico Rojo',    price: 'RD$ 1,200', emoji: '🌹', badge: 'Más vendido' },
   { id: 2, name: 'Arreglo Tropical',        price: 'RD$ 1,850', emoji: '🌺', badge: 'Nuevo' },
@@ -5,6 +7,7 @@ const PRODUCTS = [
   { id: 4, name: 'Caja de Rosas Blancas',  price: 'RD$ 2,100', emoji: '🤍', badge: 'Premium' },
   { id: 5, name: 'Mix de Temporada',        price: 'RD$ 1,400', emoji: '🌸', badge: null },
   { id: 6, name: 'Arreglo de Condolencias', price: 'RD$ 1,600', emoji: '💐', badge: null },
+  { id: 7, name: 'Ramo de Orquídeas',       price: 'RD$ 2,500', emoji: '🌷', badge: 'Exclusivo' },
 ]
 
 export default function Catalog() {
@@ -23,11 +26,7 @@ export default function Catalog() {
             {/* Product image placeholder */}
             <div className="relative bg-primary-50 h-52 flex items-center justify-center text-7xl">
               {emoji}
-              {badge && (
-                <span className="absolute top-3 left-3 bg-primary-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  {badge}
-                </span>
-              )}
+              {badge && <Badge label={badge} />}
             </div>
             <div className="p-5 flex items-center justify-between">
               <div>

@@ -8,6 +8,8 @@ const FAQS = [
   { q: '¿Realizan entregas fuera de la ciudad?', a: 'Actualmente hacemos entregas en Santo Domingo y Gran Santo Domingo. Estamos expandiendo nuestro servicio a otras ciudades. Contáctanos para consultar disponibilidad.' },
   { q: '¿Cómo se realiza el pago?', a: 'Aceptamos tarjetas de crédito/débito, transferencias bancarias y pago en efectivo al momento de la entrega. El pago online está disponible en nuestro sitio con SSL.' },
   { q: '¿Qué pasa si las flores no llegan frescas?', a: 'Garantizamos la calidad de todas nuestras flores. Si no estás satisfecho, te enviamos un nuevo arreglo o realizamos un reembolso completo sin preguntas.' },
+  { q: '¿Puedo incluir una tarjeta con mensaje personalizado?', a: 'Sí, todos nuestros arreglos incluyen una tarjeta de regalo sin costo adicional. En el campo de mensaje puedes indicar el texto exacto que deseas que aparezca en la tarjeta.' },
+  { q: '¿Ofrecen descuentos para compras frecuentes o corporativas?', a: 'Contamos con planes especiales para clientes corporativos y programas de fidelidad para clientes frecuentes. Contáctanos directamente para conocer las opciones de descuento disponibles.' },
 ]
 
 export default function FAQ() {

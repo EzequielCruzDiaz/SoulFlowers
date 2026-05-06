@@ -5,6 +5,7 @@ const BENEFITS = [
   { icon: '💳', title: 'Pago Seguro', description: 'Múltiples métodos de pago aceptados con cifrado SSL y transacciones 100% seguras.' },
   { icon: '🎁', title: 'Empaque Premium', description: 'Presentación elegante con caja, papel decorativo y tarjeta personalizada incluida.' },
   { icon: '📞', title: 'Atención 24/7', description: 'Nuestro equipo está disponible en cualquier momento para atender tu pedido.' },
+  { icon: '🌿', title: 'Flores Naturales', description: 'Trabajamos exclusivamente con flores naturales, sin artificiales. Frescura y aroma garantizados en cada entrega.' },
 ]
 
 export default function Benefits() {

@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
+
+const LS_KEY = 'weather_last_city'
 
 interface WeatherData {
   name: string
-  main: { temp: number; humidity: number }
+  main: { temp: number; humidity: number; pressure: number }
   weather: { description: string; icon: string }[]
   wind: { speed: number }
 }
@@ -13,10 +15,17 @@ interface WeatherData {
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
 export default function WeatherWidget() {
-  const [city, setCity]     = useState('')
+  const [city, setCity]     = useState(() => (typeof window !== 'undefined' ? localStorage.getItem(LS_KEY) ?? '' : ''))
   const [data, setData]     = useState<WeatherData | null>(null)
   const [status, setStatus] = useState<Status>('idle')
   const [errMsg, setErrMsg] = useState('')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(LS_KEY)
+      if (saved) setCity(saved)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,6 +46,7 @@ export default function WeatherWidget() {
       const { data: weather } = await axios.get<WeatherData>(url)
       setData(weather)
       setStatus('success')
+      localStorage.setItem(LS_KEY, trimmed)
     } catch (err: unknown) {
       setStatus('error')
       if (axios.isAxiosError(err) && err.response?.status === 404) {
@@ -101,7 +111,7 @@ export default function WeatherWidget() {
                 height={80}
               />
             </div>
-            <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
               <div className="bg-sky-50 rounded-xl p-4">
                 <p className="text-3xl font-bold text-sky-600">{Math.round(data.main.temp)}°C</p>
                 <p className="text-xs text-neutral-500 mt-1">Temperatura</p>
@@ -113,6 +123,10 @@ export default function WeatherWidget() {
               <div className="bg-sky-50 rounded-xl p-4">
                 <p className="text-3xl font-bold text-sky-600">{data.wind.speed}</p>
                 <p className="text-xs text-neutral-500 mt-1">Viento m/s</p>
+              </div>
+              <div className="bg-sky-50 rounded-xl p-4">
+                <p className="text-3xl font-bold text-sky-600">{data.main.pressure}</p>
+                <p className="text-xs text-neutral-500 mt-1">Presión hPa</p>
               </div>
             </div>
           </div>

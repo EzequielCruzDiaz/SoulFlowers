@@ -2,6 +2,7 @@ const TESTIMONIALS = [
   { name: 'María González', role: 'Cliente frecuente', text: 'El arreglo llegó puntual y hermoso. Mi mamá lloró de felicidad. Definitivamente repetiré.', stars: 5 },
   { name: 'Carlos Pérez', role: 'Cliente corporativo', text: 'Utilizamos Flores del Alma para todos nuestros eventos empresariales. Calidad y profesionalismo impecable.', stars: 5 },
   { name: 'Ana Rodríguez', role: 'Novia 2024', text: 'Las flores de mi boda superaron todas mis expectativas. El equipo fue súper atento en cada detalle.', stars: 5 },
+  { name: 'Luis Martínez', role: 'Cliente frecuente', text: 'Llevo tres años pidiendo aquí para el cumpleaños de mi esposa. Siempre fresco, siempre a tiempo y con un empaque precioso.', stars: 5 },
 ]
 
 export default function Testimonials() {
@@ -14,7 +15,7 @@ export default function Testimonials() {
         </p>
       </div>
 
-      <div className="container-xl grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="container-xl grid grid-cols-1 md:grid-cols-2 gap-6">
         {TESTIMONIALS.map(({ name, role, text, stars }) => (
           <blockquote key={name} className="card p-6 flex flex-col gap-4">
             <p className="text-sm text-neutral-600 leading-relaxed">"{text}"</p>
