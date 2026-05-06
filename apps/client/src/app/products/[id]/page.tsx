@@ -1,12 +1,16 @@
+'use client'
+
+import { useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import { findProduct } from '@/data/products'
+import { useCart } from '@/context/CartContext'
 
-const SIZES = [
-  { label: 'Standard', price: 'RD$ 2,800' },
-  { label: 'Deluxe',   price: 'RD$ 3,750' },
-  { label: 'Premium',  price: 'RD$ 4,750' },
-]
+type Size = 'Standard' | 'Deluxe' | 'Premium'
+
+const SIZES: Size[] = ['Standard', 'Deluxe', 'Premium']
 
 const CARE = [
   {
@@ -27,6 +31,32 @@ const CARE = [
 ]
 
 export default function ProductDetailPage() {
+  const params = useParams()
+  const router = useRouter()
+  const { addItem } = useCart()
+
+  const product = findProduct(params.id as string)
+  const [selectedSize, setSelectedSize] = useState<Size>('Standard')
+  const [qty, setQty] = useState(1)
+  const [added, setAdded] = useState(false)
+
+  const price = product.prices[selectedSize]
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < qty; i++) {
+      addItem({ productId: product.id, name: product.name, size: selectedSize, price, img: product.img })
+    }
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
+
+  const handleBuyNow = () => {
+    for (let i = 0; i < qty; i++) {
+      addItem({ productId: product.id, name: product.name, size: selectedSize, price, img: product.img })
+    }
+    router.push('/checkout')
+  }
+
   return (
     <>
       <Header />
@@ -35,126 +65,143 @@ export default function ProductDetailPage() {
         {/* Product grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
 
-          {/* ── Bento Gallery ── */}
+          {/* Gallery */}
           <div className="lg:col-span-7 grid grid-cols-2 gap-4">
-            {/* Main wide image */}
             <div className="col-span-2 relative aspect-[16/9] overflow-hidden rounded-2xl bg-surface-container-low group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvBMlepaMGlSLsRmUjYKleePoju8dIMpNP0ZYX1FJMaYVQ4U5myM1hDGzMFUAbHIlTeqZg6XNF-iaLUfEEX-3RDUTeKJ6k-1Sa1ilxAfxuDKIfZFIZtDBCxPzhFQxIrUotqEf0TUtzWUuXhq0KTApGD3AkgdmUIrhILsv9qODxl3o9n4D665Kj3HVjGvu1xnaWZJTwDndoOZ0tAXRQ4YyECDtnCZu5PUtYo9uO675fLYZUBAu4e0-KxZAxfQVpiKq5nKP3BdUJ_cQ"
-                alt="Arreglo Aurora Boreal con ranúnculos y eucalipto"
+                src={product.img}
+                alt={product.alt}
               />
               <div className="absolute inset-0 linen-texture pointer-events-none opacity-30" />
             </div>
-
-            {/* Secondary images */}
-            {[
-              {
-                src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDj8a--H6nrdp3XMmv5t_NIsBzaP8DVNGnFvYEiPF68GPA89a9d6OQHVy_V-gSaxhbQrXuaos6L9IudZhi1tAIeINxqCDpY5joPGLjt1dcs4W0tJkyxaVjsEsEMDAKs-RgeKys0lRrvDbNOICfv22rjZdrPlkIKvK_2wyU7KyuRzMOMSkKMi8KMmQoUOzVnmHJIeA49uBG7S_0wYnhm9jfnO-GZw2HJHriuNc3SwrzyZ6iLuUHVBhQoooD2fYCgQ3aFhbrNkqkoq-0',
-                alt: 'Tallos de eucalipto plateado sobre superficie de lino',
-              },
-              {
-                src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDe_qG2R_6rH90jOlROBgakMZs7cJWIM8KwyKz-w3n9sT7WK5o9cm1d14eUCJRAI5Mr17ZpirwPwqBVZPS2WNRSS8DGyDP9XCZfJeSBzsjoqnAzh9G24z4b_ETzhPhQWUFq9SpS9Am86ZV5sloog25tXQsvxvFwbzEXEpqE8U1R3CWHX8j9CCfVnDCugaWDi7I2N8KnWIcy2bptpTZPA4bVK724HZN9m-4Sdd86glKkrbsy0PUIFI8VUrGjPqKEbfdrkrrJAjBh51g',
-                alt: 'Pétalos de ranúnculo en tonos crema y rubor',
-              },
-            ].map(({ src, alt }) => (
-              <div key={alt} className="aspect-square bg-surface-container-low rounded-2xl overflow-hidden relative group">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  src={src}
-                  alt={alt}
-                />
-                <div className="absolute inset-0 linen-texture pointer-events-none opacity-30" />
-              </div>
-            ))}
+            <div className="aspect-square bg-surface-container-low rounded-2xl overflow-hidden relative group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src={product.img} alt={product.alt} />
+            </div>
+            <div className="aspect-square bg-surface-container rounded-2xl flex items-center justify-center">
+              <span className="material-symbols-outlined text-6xl text-primary/20">eco</span>
+            </div>
           </div>
 
-          {/* ── Product Info (sticky) ── */}
-          <div className="lg:col-span-5 space-y-10 lg:sticky lg:top-28">
+          {/* Product info */}
+          <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-28">
 
             {/* Breadcrumb */}
             <nav className="flex gap-2 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
               <Link href="/catalog" className="hover:text-primary transition-colors">Catálogo</Link>
               <span>/</span>
-              <span>Colecciones de Temporada</span>
+              <span>{product.category}</span>
             </nav>
 
             <div>
-              <h1 className="font-display-lg text-display-lg text-primary mb-3">Aurora Boreal</h1>
-              <p className="font-headline-md text-headline-md text-on-surface">RD$ 2,800 — RD$ 4,750</p>
+              {product.badge && (
+                <span className="inline-block bg-primary text-on-primary px-3 py-1 rounded-full font-label-sm text-label-sm uppercase mb-3">
+                  {product.badge}
+                </span>
+              )}
+              <h1 className="font-display-lg text-display-lg text-primary mb-2">{product.name}</h1>
+              <p className="font-headline-md text-headline-md text-on-surface">
+                RD$ {product.prices.Standard.toLocaleString()} — RD$ {product.prices.Premium.toLocaleString()}
+              </p>
             </div>
 
-            <div className="space-y-6">
-              <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-                Inspirado en la danza etérea de las auroras boreales, este arreglo artesanal combina ranúnculos premium y eucalipto aromático. Una composición celestial para quienes aprecian la belleza natural del mundo vegetal.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {['Temporada', 'Artesanal', 'Follaje Premium'].map(tag => (
-                  <span
-                    key={tag}
-                    className="px-4 py-1.5 bg-surface-container border border-outline-variant font-label-sm text-label-sm rounded-full text-on-surface-variant"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              {product.description}
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {product.tags.map(tag => (
+                <span key={tag} className="px-4 py-1.5 bg-surface-container border border-outline-variant font-label-sm text-label-sm rounded-full text-on-surface-variant">
+                  {tag}
+                </span>
+              ))}
             </div>
 
             {/* Size selector */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">
-                Seleccionar Tamaño
+                Tamaño — RD$ {price.toLocaleString()}
               </span>
               <div className="grid grid-cols-3 gap-3">
-                {SIZES.map(({ label, price }, i) => (
+                {SIZES.map(size => (
                   <button
-                    key={label}
+                    key={size}
                     type="button"
+                    onClick={() => setSelectedSize(size)}
                     className={`flex flex-col items-center justify-center py-5 rounded-xl transition-all border ${
-                      i === 0
-                        ? 'border-2 border-primary bg-primary-container text-primary-fixed shadow-sm'
+                      selectedSize === size
+                        ? 'border-2 border-primary bg-primary-container text-primary shadow-sm'
                         : 'border-outline-variant hover:border-primary bg-surface text-primary'
                     }`}
                   >
-                    <span className="font-label-sm text-label-sm">{label}</span>
-                    <span className="text-[11px] opacity-80 mt-1">{price}</span>
+                    <span className="font-label-sm text-label-sm">{size}</span>
+                    <span className="text-[11px] opacity-70 mt-1">RD$ {product.prices[size].toLocaleString()}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Message card */}
-            <div className="space-y-4">
-              <label
-                htmlFor="card-message"
-                className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block"
-              >
-                Tarjeta Personalizada
-              </label>
-              <textarea
-                id="card-message"
-                rows={4}
-                placeholder="Escribe tu mensaje aquí..."
-                className="w-full bg-surface-container border-none focus:ring-1 focus:ring-primary text-body-md rounded-2xl p-5 resize-none placeholder:text-outline outline-none transition-all"
-              />
+            {/* Quantity */}
+            <div className="space-y-3">
+              <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">
+                Cantidad
+              </span>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setQty(q => Math.max(1, q - 1))}
+                  className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:border-primary transition-colors"
+                  aria-label="Disminuir cantidad"
+                >
+                  <span className="material-symbols-outlined text-[20px]">remove</span>
+                </button>
+                <span className="font-headline-md text-headline-md text-primary w-8 text-center">{qty}</span>
+                <button
+                  type="button"
+                  onClick={() => setQty(q => q + 1)}
+                  className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:border-primary transition-colors"
+                  aria-label="Aumentar cantidad"
+                >
+                  <span className="material-symbols-outlined text-[20px]">add</span>
+                </button>
+                <span className="font-body-md text-on-surface-variant ml-2">
+                  Total: RD$ {(price * qty).toLocaleString()}
+                </span>
+              </div>
             </div>
 
-            {/* CTA */}
-            <Link
-              href="/checkout"
-              className="w-full py-5 bg-primary text-on-primary font-headline-md text-headline-md rounded-2xl hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-3 active:scale-[0.98] shadow-lg shadow-primary/10"
-            >
-              <span className="material-symbols-outlined text-[20px]">local_mall</span>
-              Añadir a la Colección
-            </Link>
+            {/* CTAs */}
+            <div className="space-y-3 pt-2">
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                className="w-full py-5 bg-primary text-on-primary font-headline-md text-headline-md rounded-2xl hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-3 active:scale-[0.98] shadow-lg shadow-primary/10"
+              >
+                <span className="material-symbols-outlined text-[20px]">local_mall</span>
+                Comprar Ahora
+              </button>
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className={`w-full py-4 border-2 font-headline-md rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 active:scale-[0.98] ${
+                  added
+                    ? 'border-primary bg-primary-container text-primary'
+                    : 'border-primary text-primary hover:bg-primary-container'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[20px]">{added ? 'check_circle' : 'add_shopping_cart'}</span>
+                {added ? '¡Añadido al carrito!' : 'Añadir al Carrito'}
+              </button>
+            </div>
 
             {/* Trust badges */}
-            <div className="pt-10 border-t border-outline-variant/30 space-y-5">
+            <div className="pt-8 border-t border-outline-variant/30 space-y-5">
               {[
                 { icon: 'eco',            text: 'Cultivado de forma sostenible con productores locales' },
-                { icon: 'delivery_dining', text: 'Entrega el mismo día disponible en áreas metropolitanas' },
+                { icon: 'delivery_dining', text: 'Entrega el mismo día para pedidos antes de las 10 AM' },
+                { icon: 'lock',           text: 'Compra segura con cifrado SSL de 256 bits' },
               ].map(({ icon, text }) => (
                 <div key={text} className="flex items-center gap-4 text-on-surface-variant">
                   <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0">
@@ -167,12 +214,9 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* ── Care & Longevity ── */}
+        {/* Care section */}
         <section className="mt-32 bg-surface-container rounded-[40px] p-16 relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="absolute top-0 right-0 w-96 h-96 bg-primary-container opacity-10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"
-          />
+          <div aria-hidden="true" className="absolute top-0 right-0 w-96 h-96 bg-primary-container opacity-10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           <div className="relative z-10">
             <h2 className="font-headline-lg text-headline-lg text-primary mb-12 border-b border-outline-variant pb-6">
               Cuidado y Longevidad

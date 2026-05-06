@@ -4,11 +4,19 @@ import { useState } from 'react'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim()) return
+    setStatus('success')
+    setEmail('')
+    setTimeout(() => setStatus('idle'), 5000)
+  }
 
   return (
     <section aria-labelledby="newsletter-title" className="py-32 px-margin-desktop">
       <div className="max-w-[1000px] mx-auto bg-surface border border-outline-variant p-16 lg:p-24 rounded-[48px] text-center linen-texture relative overflow-hidden">
-        {/* Decorative blurs */}
         <div aria-hidden="true" className="absolute -top-24 -left-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
         <div aria-hidden="true" className="absolute -bottom-24 -right-24 w-64 h-64 bg-primary-fixed/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -19,25 +27,39 @@ export default function Newsletter() {
           Consejos de temporada, novedades del estudio y acceso anticipado a colecciones de edición limitada directo a tu bandeja de entrada.
         </p>
 
-        <form
-          className="flex flex-col md:flex-row gap-6 max-w-md mx-auto relative z-10"
-          onSubmit={e => { e.preventDefault(); setEmail('') }}
-        >
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="Correo electrónico"
-            className="flex-1 bg-transparent border-b-2 border-outline-variant focus:border-primary focus:outline-none px-0 py-4 font-body-md placeholder:text-outline transition-colors"
-          />
-          <button
-            type="submit"
-            className="bg-primary text-on-primary px-10 py-4 rounded-full font-label-sm hover:bg-primary-container transition-all uppercase tracking-widest"
+        <div aria-live="polite" className="mb-6 relative z-10 min-h-[2rem]">
+          {status === 'success' && (
+            <p className="text-primary font-label-sm font-semibold flex items-center justify-center gap-2">
+              <span className="material-symbols-outlined text-[18px]">check_circle</span>
+              ¡Gracias! Te hemos añadido a nuestro círculo botánico.
+            </p>
+          )}
+          {status === 'error' && (
+            <p className="text-red-600 font-label-sm">Ocurrió un error. Intenta de nuevo.</p>
+          )}
+        </div>
+
+        {status !== 'success' && (
+          <form
+            className="flex flex-col md:flex-row gap-6 max-w-md mx-auto relative z-10"
+            onSubmit={handleSubmit}
           >
-            Suscribirme
-          </button>
-        </form>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="Correo electrónico"
+              className="flex-1 bg-transparent border-b-2 border-outline-variant focus:border-primary focus:outline-none px-0 py-4 font-body-md placeholder:text-outline transition-colors"
+            />
+            <button
+              type="submit"
+              className="bg-primary text-on-primary px-10 py-4 rounded-full font-label-sm hover:bg-primary/90 transition-all uppercase tracking-widest"
+            >
+              Suscribirme
+            </button>
+          </form>
+        )}
       </div>
     </section>
   )

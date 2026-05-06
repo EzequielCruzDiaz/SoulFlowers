@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useCart } from '@/context/CartContext'
 
 const NAV_LINKS = [
-  { href: '/',          label: 'Inicio' },
-  { href: '#catalogo',  label: 'Catálogo' },
-  { href: '#nosotros',  label: 'Nosotros' },
-  { href: '#contacto',  label: 'Contacto' },
+  { href: '/',         label: 'Inicio' },
+  { href: '#catalogo', label: 'Catálogo' },
+  { href: '#nosotros', label: 'Nosotros' },
+  { href: '#contacto', label: 'Contacto' },
 ]
 
 export default function Header() {
@@ -15,6 +16,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const menuRef = useRef<HTMLUListElement>(null)
   const btnRef  = useRef<HTMLButtonElement>(null)
+  const { count } = useCart()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -66,34 +68,31 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Search + icons + CTA */}
+        {/* Icons + CTA */}
         <div className="flex items-center gap-5">
-          <div className="hidden lg:block relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant !text-[20px]">
-              search
-            </span>
-            <input
-              type="text"
-              placeholder="Buscar arreglos..."
-              className="bg-surface-container border-none rounded-full py-2 pl-10 pr-4 text-xs font-medium w-56 focus:ring-1 focus:ring-primary outline-none"
-            />
-          </div>
-
-          <div className="flex gap-3">
-            <button
-              type="button"
-              aria-label="Carrito"
-              className="material-symbols-outlined text-primary hover:text-secondary transition-colors duration-300"
+          <div className="flex gap-3 items-center">
+            {/* Cart */}
+            <Link
+              href="/checkout"
+              aria-label={`Carrito${count > 0 ? `, ${count} artículos` : ''}`}
+              className="relative text-primary hover:text-secondary transition-colors duration-300"
             >
-              shopping_cart
-            </button>
-            <button
-              type="button"
-              aria-label="Perfil"
+              <span className="material-symbols-outlined">shopping_cart</span>
+              {count > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-primary text-on-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                  {count > 9 ? '9+' : count}
+                </span>
+              )}
+            </Link>
+
+            {/* Profile */}
+            <Link
+              href="/login"
+              aria-label="Iniciar sesión"
               className="material-symbols-outlined text-primary hover:text-secondary transition-colors duration-300"
             >
               person
-            </button>
+            </Link>
           </div>
 
           <a href="#contacto" className="hidden md:inline-flex btn-primary text-sm px-5 py-2.5">
@@ -105,7 +104,7 @@ export default function Header() {
             ref={btnRef}
             type="button"
             aria-controls="mobile-menu"
-            aria-expanded={isOpen ? 'true' : 'false'}
+            aria-expanded={isOpen}
             aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
             onClick={() => setIsOpen(v => !v)}
             className="md:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-surface-container transition-colors"

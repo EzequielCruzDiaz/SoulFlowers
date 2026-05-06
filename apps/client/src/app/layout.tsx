@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Noto_Serif, Inter } from 'next/font/google'
+import { CartProvider } from '@/context/CartContext'
 import './globals.css'
 
 const notoSerif = Noto_Serif({
@@ -47,7 +48,7 @@ export default function RootLayout({
         >
           Saltar al contenido principal
         </a>
-        {children}
+        <CartProvider>{children}</CartProvider>
       </body>
     </html>
   )
