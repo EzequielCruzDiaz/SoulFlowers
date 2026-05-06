@@ -1,12 +1,11 @@
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Hero from '@/components/sections/Hero'
-import Benefits from '@/components/sections/Benefits'
-import Catalog from '@/components/sections/Catalog'
-import Testimonials from '@/components/sections/Testimonials'
-import FAQ from '@/components/sections/FAQ'
+import SeasonalCollections from '@/components/sections/SeasonalCollections'
+import Process from '@/components/sections/Process'
+import Deliveries from '@/components/sections/Deliveries'
+import Newsletter from '@/components/sections/Newsletter'
 import ContactForm from '@/components/sections/ContactForm'
-import WeatherWidget from '@/components/sections/WeatherWidget'
 
 export default function HomePage() {
   return (
@@ -14,11 +13,10 @@ export default function HomePage() {
       <Header />
       <main id="contenido">
         <Hero />
-        <Benefits />
-        <Catalog />
-        <Testimonials />
-        <WeatherWidget />
-        <FAQ />
+        <SeasonalCollections />
+        <Process />
+        <Deliveries />
+        <Newsletter />
         <ContactForm />
       </main>
       <Footer />

@@ -21,8 +21,8 @@ export function useProducts() {
   const [error, setError]       = useState<string | null>(null)
 
   useEffect(() => {
-    api.get<{ data: Product[] }>('/api/products')
-      .then(({ data }) => setProducts(data.data))
+    api.get<{ products: Product[] }>('/api/products')
+      .then(({ data }) => setProducts(data.products))
       .catch(() => setError('No se pudieron cargar los productos.'))
       .finally(() => setLoading(false))
   }, [])

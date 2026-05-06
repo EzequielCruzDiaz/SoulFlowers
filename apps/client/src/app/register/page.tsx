@@ -19,7 +19,7 @@ export default function RegisterPage() {
       localStorage.setItem('token', data.token)
       router.push('/')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
       setError(msg ?? 'Error al registrarse. Intenta de nuevo.')
     } finally {
       setLoading(false)

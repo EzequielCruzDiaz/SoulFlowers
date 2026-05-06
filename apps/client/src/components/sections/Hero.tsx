@@ -1,48 +1,42 @@
 export default function Hero() {
   return (
-    <section
-      aria-labelledby="hero-title"
-      className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-primary-100 py-20 md:py-32"
-    >
-      {/* Decorative circles */}
-      <div aria-hidden="true" className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary-200 opacity-30 blur-3xl" />
-      <div aria-hidden="true" className="absolute -bottom-16 -left-16 w-72 h-72 rounded-full bg-primary-300 opacity-20 blur-3xl" />
+    <section aria-labelledby="hero-title" className="relative h-[90vh] w-full flex items-center overflow-hidden">
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className="w-full h-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbi9RiNWhylrNG_zbJQA6K-hMadZgCfpi8ozXtB5bWq1ihL7ZVqKNHto1ZPkFSWjedgs2dzVgPxjegRpr22yI482gfOOqXdwdfgE8hrkaUEK_nGaPXwMOncGSJedIFJhrEfkEqfkh6KyrKDE9JVonEV_uPQ128U4mnUPdQ5iplT7W4y0hVgN-YPUbt9kElC5gWo_cKQzP8HCdBgsk7MimMxtQPoPuO1XhUG6gzbnPk-qTZAeNTgGVcBHWf5gNVjFQv1UCxAZ2ll2A"
+          alt="Jardín botánico con helechos y orquídeas"
+        />
+        <div className="absolute inset-0 hero-gradient" />
+      </div>
 
-      <div className="container-xl relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="inline-block mb-4 px-4 py-1.5 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full">
-              🌸 Entrega el mismo día
-            </span>
-            <h1
-              id="hero-title"
-              className="text-4xl md:text-5xl lg:text-6xl font-display text-neutral-900 leading-[1.1] mb-6"
+      {/* Content */}
+      <div className="relative z-10 max-w-container-max mx-auto px-margin-desktop w-full text-surface">
+        <div className="max-w-2xl">
+          <span className="font-label-sm text-label-sm tracking-[0.2em] text-primary-fixed uppercase block mb-4">
+            Established 2024
+          </span>
+          <h1 id="hero-title" className="font-display-lg text-display-lg mb-6 leading-[1.1] text-surface">
+            El Arte de la Botánica.
+          </h1>
+          <p className="font-body-lg text-body-lg mb-8 text-surface-container-high max-w-lg">
+            Arreglos artesanales que capturan la belleza salvaje de las estaciones. Entregados desde nuestro estudio a tu santuario.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <a
+              href="#catalogo"
+              className="bg-primary-fixed text-on-primary-fixed px-8 py-4 rounded-full font-label-sm hover:bg-primary-fixed-dim transition-all active:scale-95 shadow-lg"
             >
-              Flores frescas para <em className="text-primary-600 not-italic">cada ocasión</em>
-            </h1>
-            <p className="text-lg text-neutral-600 mb-8 max-w-lg">
-              Arreglos florales personalizados con flores del día, diseñados con amor
-              y entregados en tu puerta cuando más los necesitas.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a href="#catalogo" className="btn-primary">
-                Haz tu pedido hoy
-              </a>
-              <a href="#beneficios" className="btn-secondary">
-                Conoce más
-              </a>
-            </div>
-          </div>
-
-          {/* Placeholder image area */}
-          <div className="hidden md:flex items-center justify-center">
-            <div
-              className="w-full max-w-md aspect-square rounded-3xl bg-primary-100 flex items-center justify-center text-primary-300 text-8xl"
-              role="img"
-              aria-label="Arreglo floral decorativo"
+              Ver Colección
+            </a>
+            <a
+              href="#proceso"
+              className="border border-surface text-surface px-8 py-4 rounded-full font-label-sm hover:bg-surface/10 transition-all active:scale-95"
             >
-              🌺
-            </div>
+              Nuestro Proceso
+            </a>
           </div>
         </div>
       </div>

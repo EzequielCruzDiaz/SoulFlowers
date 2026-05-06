@@ -20,19 +20,27 @@ router.post('/', async (req, res) => {
 
 // GET /api/contact  (admin only)
 router.get('/', protect, adminOnly, async (req, res) => {
-  const { status, page = 1, limit = 20 } = req.query
-  const filter: Record<string, unknown> = {}
-  if (status) filter.status = status
-  const total    = await Contact.countDocuments(filter)
-  const messages = await Contact.find(filter).sort({ createdAt: -1 }).skip((+page - 1) * +limit).limit(+limit)
-  res.json({ messages, total })
+  try {
+    const { status, page = 1, limit = 20 } = req.query
+    const filter: Record<string, unknown> = {}
+    if (status) filter.status = status
+    const total    = await Contact.countDocuments(filter)
+    const messages = await Contact.find(filter).sort({ createdAt: -1 }).skip((+page - 1) * +limit).limit(+limit)
+    res.json({ messages, total })
+  } catch {
+    res.status(500).json({ error: 'Error al obtener mensajes' })
+  }
 })
 
 // PATCH /api/contact/:id  (admin only)
 router.patch('/:id', protect, adminOnly, async (req, res) => {
-  const msg = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true })
-  if (!msg) return res.status(404).json({ error: 'Mensaje no encontrado' })
-  res.json(msg)
+  try {
+    const msg = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    if (!msg) return res.status(404).json({ error: 'Mensaje no encontrado' })
+    res.json(msg)
+  } catch {
+    res.status(404).json({ error: 'Mensaje no encontrado' })
+  }
 })
 
 export default router

@@ -25,16 +25,20 @@ router.get('/', async (req, res) => {
 
 // GET /api/products/:id (public)
 router.get('/:id', async (req, res) => {
-  const product = await Product.findById(req.params.id)
-  if (!product) return res.status(404).json({ error: 'Producto no encontrado' })
-  res.json(product)
+  try {
+    const product = await Product.findOne({ _id: req.params.id, isActive: true })
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' })
+    res.json(product)
+  } catch {
+    res.status(404).json({ error: 'Producto no encontrado' })
+  }
 })
 
 // POST /api/products (admin only)
 router.post('/', protect, adminOnly, async (req, res) => {
   try {
     const product = await Product.create(req.body)
-    res.status(201).json(product)
+    res.status(201).json({ data: product })
   } catch (err: unknown) {
     res.status(400).json({ error: (err as Error).message })
   }
@@ -42,15 +46,23 @@ router.post('/', protect, adminOnly, async (req, res) => {
 
 // PATCH /api/products/:id (admin only)
 router.patch('/:id', protect, adminOnly, async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
-  if (!product) return res.status(404).json({ error: 'Producto no encontrado' })
-  res.json(product)
+  try {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' })
+    res.json({ data: product })
+  } catch (err: unknown) {
+    res.status(400).json({ error: (err as Error).message })
+  }
 })
 
 // DELETE /api/products/:id — soft delete (admin only)
 router.delete('/:id', protect, adminOnly, async (req, res) => {
-  await Product.findByIdAndUpdate(req.params.id, { isActive: false })
-  res.json({ message: 'Producto desactivado' })
+  try {
+    await Product.findByIdAndUpdate(req.params.id, { isActive: false })
+    res.json({ message: 'Producto desactivado' })
+  } catch {
+    res.status(500).json({ error: 'Error al eliminar producto' })
+  }
 })
 
 export default router
